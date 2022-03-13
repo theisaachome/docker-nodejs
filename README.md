@@ -7,7 +7,9 @@
 - [Running Image](#runing-docker-image)
 - [Docker Port Mapping](#docker-port-mapping)
 - [Volum Hack](#anonymous-volumes-hack)
-
+- [Read Only bind Mount](#read-only-bind-mounts)
+- [Environment variables](#environment-variables)
+- [Delete Volume](#deleting-stale-volumes)
 ---
 
 ## Create Custom Image
@@ -83,6 +85,18 @@ $ docker rm ca7869d71b32 (container Id or name) -f
 - ```-p 8080:80```	
 - Map TCP port 80 in the container to port 8080 on the Docker host.
 
+
+Set up docker container port
+- `EXPORT 3000`
+```
+FROM node:15
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . ./
+EXPORT 3000
+```
+
 ![docker port mapping](./images/docker-port-mapping.png)
 Example
 ```sh
@@ -113,6 +127,8 @@ README.md
 
 ## Syncing source code with bind mounts
 
+## Anonymous Volumes hack
+
 - To get most updated code from local to docker container
 
 1. Create  docker volume
@@ -136,8 +152,91 @@ $ docker build -v /Users/isaachome/workspace/docker-workspace/:/app -t node-app 
     - `$(pwd)`
 
 ```sh
-$ docker build -v $(pwd):/app -t node-app node-app-image
+$ docker build -v $(pwd):/app -p 3000:3000 -t node-app node-app-image
 ```
 
 ---
-## Anonymous Volumes hack
+
+## Read only Bind Mounts
+
+```sh
+$ docker build -v $(pwd):/app -v /app/node_modules -t -p 3000:3000 node-app node-app-image
+```
+
+### check the file
+```sh
+$ docker exec -it node-app bash
+```
+
+## readonly folder
+
+- ro => readonly
+
+```sh
+$ docker build -v $(pwd):/app:ro -v /app/node_modules -t -p 3000:3000 node-app node-app-image
+```
+
+---
+
+## **Environment variables**
+
+
+- Setup Environment variables
+
+```Dockerfile
+ENV (key) (Value)
+```
+```dockerFile
+
+ENV PORT 3000
+EXPOSE ${PORT}
+```
+
+1. Passing environment variables with command line
+    - if you don't pass it will use from dockerfile.
+    - ```$ --env PORT=4000```
+
+- Example
+```
+$ docker build -v $(pwd):/app:ro -v /app/node_modules -t --env PORT=4000 -p 3000:4000 node-app node-app-image
+```
+
+2. Loading environment variable from files
+
+    - create .env file
+    ```.env
+    PORT=4000
+    ```
+```
+$ docker build -v $(pwd):/app:ro -v /app/node_modules -t --env-file ./.env -p 3000:4000 node-app node-app-image
+```
+    ` --env-file ./.env `
+### check enviroment variable after running container
+
+```sh
+printenv
+```
+
+---
+
+## **Deleting stale volumes**
+
+- to check docker volume
+
+```
+$ docker volume ls
+```
+- to delete all volumme
+
+``` 
+$ docker volume prune
+```
+- to delete when we stop the container with its associated volume
+
+```
+$ docker rm node-app (container-name or id) -fv
+```
+
+---
+
+## Docker compose

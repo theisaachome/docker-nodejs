@@ -10,6 +10,8 @@
 - [Read Only bind Mount](#read-only-bind-mounts)
 - [Environment variables](#environment-variables)
 - [Delete Volume](#deleting-stale-volumes)
+- [Docker compose](#docker-compose)
+- [Development Vs Production](#development-vs-production)
 ---
 
 ## Create Custom Image
@@ -240,3 +242,42 @@ $ docker rm node-app (container-name or id) -fv
 ---
 
 ## Docker compose
+
+- create doccker compose file
+
+- docker-compose.yml
+
+```yml
+version: '3'
+services:
+  node-app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - PORT=3000  #the Dockerfile 
+```
+
+- To run docker compose file
+
+```
+$ docker-compose up -d
+```
+
+- To delete all docker compose file and its volume
+```
+$ docker-compose down -v
+```
+
+- To rebuild new update brand new build
+
+```
+$ docker-compose up -d --build
+```
+
+---
+
+## Development Vs Production

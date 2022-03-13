@@ -82,6 +82,25 @@ $ docker rm ca7869d71b32 (container Id or name) -f
 ![docker port mapping](./images/docker-port-mapping.png)
 Example
 ```sh
-docker run -p 3000:3000 -d node-app  node-app-image
+docker run -p 3000:3000 -d --name node-app  node-app-image
 ```
 
+
+---
+##  runing interactive mode into docker container
+
+```sh
+$ docker exec -it node-app bash
+```
+
+## add docker ignore file
+
+```
+node_modules
+Dockerfile
+.dockerignore
+.git
+.gitignore
+images/
+README.md
+```

@@ -5,3 +5,4 @@ Dockerfile
 .gitignore
 images/
 README.md
+docker-compose*

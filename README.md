@@ -281,3 +281,59 @@ $ docker-compose up -d --build
 ---
 
 ## Development Vs Production
+
+- create docker-compose file for each mode
+
+1. base docker-compose file where they share common 
+```yml
+version: "3"
+services:
+  node-app:
+    build: .
+    ports:
+       - "3000:3000"
+    environment:
+      - PORT=3000
+```
+2. development docker-compose file 
+```yml
+version: "3"
+services:
+  node-app:
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+```
+
+3. production docker-compose file
+
+```yml
+version: "3"
+services:
+  node-app:
+    environment:
+      - NODE_ENV= production
+    command: node index.js
+```
+
+## Running multiple docker-compose files
+
+### Order of file matter
+
+- for development file
+```sh
+$ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+- for production file
+
+```sh
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+- Delete docker-compose files
+```sh
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml down -v
+```

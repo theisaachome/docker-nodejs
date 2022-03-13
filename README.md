@@ -3,6 +3,10 @@
 ## Table of Content 
 
 - [Docker Set up]()
+- [Docker Image](#create-custom-image)
+- [Running Image](#runing-docker-image)
+- [Docker Port Mapping](#docker-port-mapping)
+- [Volum Hack](#anonymous-volumes-hack)
 
 ---
 
@@ -66,7 +70,7 @@ $ docker stop ca7869d71b32(container_id)
 $ docker rm ca7869d71b32 (container Id or name) -f
 ```
 
-## Docker PORT Forwarding and Exporting
+## Docker PORT Mapping
 
 - p ``` -p 4000:3000 ```
 
@@ -104,3 +108,36 @@ Dockerfile
 images/
 README.md
 ```
+
+---
+
+## Syncing source code with bind mounts
+
+- To get most updated code from local to docker container
+
+1. Create  docker volume
+    - local source code are syncing into this volume in docker.
+
+2. volume type bind mounts
+
+- `-v pathToFolderOnLocation:pathToFolderOnContainer`
+
+```sh
+$ docker build -v /Users/isaachome/workspace/docker-workspace/:/app -t node-app node-app-image
+```
+
+- To get the path and use in command line 
+
+1. Window 
+    - `%cd%`
+2. Powershell
+    - `${pwd}`
+3. Mac and linux
+    - `$(pwd)`
+
+```sh
+$ docker build -v $(pwd):/app -t node-app node-app-image
+```
+
+---
+## Anonymous Volumes hack

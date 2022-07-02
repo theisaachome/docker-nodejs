@@ -1,0 +1,14 @@
+{
+  "name": "webserver",
+  "version": "1.0.0",
+  "description": "Testing for Docker Web.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express":"*"
+  },
+  "author": "isaachome@highway65",
+  "license": "ISC"
+}
